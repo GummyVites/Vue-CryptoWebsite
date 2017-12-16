@@ -1,9 +1,35 @@
 <template>
-  <div class = "test">
+<div class="test">
   <div class="search-wrapper">
-    <input type="text" v-model="search" placeholder="Search Coin Symbol"/>
+    <section id="masthead" class="shadow">
+      <div class="container_m">
+        <nav>
+          <ul>
+            <li>
+              <a href=""><span class="icon-drawer"></span>&nbsp;  Portfolio</a>
+            </li>
+            <li>
+              <a href=""><span class="icon-bubbles"></span>&nbsp; News</a>
+            </li>
+            <li>
+              <a href="#"><span class="icon-dice"></span>&nbsp;Data Visulization</a>
+            </li>
+            <li>
+              <a href="">Login</a>
+            </li>
+            <li>
+              <a href="#">About us</a>
+            </li>
+            <li>
+              <input type="text" v-model="search" placeholder="Search Coin Symbol" />
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </section>
   </div>
-  <div v-if = "search !='' " v-for ="item in filteredName" icon="search" class="card card-1">
+
+  <div v-for="item in filteredName" icon="search" class="card card-1">
     <div>{{item.name}}</div>
     <div>{{item.symbol}}</div>
     <div>Coin Price in USD: ${{item.price_usd}}</div>
@@ -14,102 +40,199 @@
     <div>One Week Change: {{item.percent_change_24h}}</div>
   </div>
 
-  <div v-else v-for ="n in 100" class="card card-1">
-    <div>{{coinNames[n-1]}}</div>
-    <div>{{coinSymbol[n-1]}}</div>
-    <div>Coin Price in USD: ${{coinPrice[n-1]}}</div>
-    <div>Bitcoin Price: {{bitcoinPrice[n-1]}}</div>
-    <div>Market Cap: {{marketCap[n-1]}}</div>
-    <div>One Hour Change: {{change1hour[n-1]}}</div>
-    <div>One Day Change: {{change24hour[n-1]}}</div>
-    <div>One Week Change: {{change1week[n-1]}}</div>
-  </div>
-
 </div>
 </template>
 
 <script>
-  export default {
-    name: 'test',
-    computed:{
-      filteredName:function(){
-          return this.coins.filter((item) => {
-             return item.symbol.toUpperCase().includes(this.search.toUpperCase());
-          });
-          // }
-        }
-      },
-    data() {
-      return {
-        coinNames: [],
-        coinSymbol: [],
-        rank: [],
-        coinPrice: [],
-        bitcoinPrice: [],
-        marketCap: [],
-        change1hour: [],
-        change24hour: [],
-        change1week: [],
-        coinImg: [],
-        maxSupply: [],
-        totalSuply: [],
-        coins: [],
-        search: ''
-      }
-    },
-      created: function() {
-      this.$http.get('https://api.coinmarketcap.com/v1/ticker/')
-        .then(function(response) {
-          var datas = response.data;
-          this.coins = response.data;
-          // console.log(this.coins);
+export default {
+  name: 'test',
+  data() {
+    return {
+      coinNames: [],
+      coinSymbol: [],
+      rank: [],
+      coinPrice: [],
+      bitcoinPrice: [],
+      marketCap: [],
+      change1hour: [],
+      change24hour: [],
+      change1week: [],
+      coinImg: [],
+      maxSupply: [],
+      totalSuply: [],
+      coins: [],
+      search: ''
+    }
+  },
+  created: function() {
+    this.$http.get('https://api.coinmarketcap.com/v1/ticker/')
+      .then(function(response) {
+        var datas = response.data;
+        this.coins = response.data;
 
-          for (var i = 0; i < Object.keys(datas).length; i++) {
-            this.$set(this.coinNames, i, datas[i].name)
-            this.$set(this.coinSymbol, i, datas[i].symbol)
-            this.$set(this.rank, i, datas[i].rank)
-            this.$set(this.coinPrice, i, datas[i].price_usd)
-            this.$set(this.bitcoinPrice, i, datas[i].price_btc)
-            this.$set(this.marketCap, i, datas[i].market_cap_usd)
-            this.$set(this.change1hour, i, datas[i].percent_change_1h)
-            this.$set(this.change24hour, i, datas[i].percent_change_7d)
-            this.$set(this.change1week, i, datas[i].percent_change_24h)
-            this.$set(this.totalSuply, i, datas[i].total_supply)
-            this.$set(this.maxSupply, i, datas[i].max_supply)
-          }
-        })
+        for (var i = 0; i < Object.keys(datas).length; i++) {
+          this.$set(this.coinNames, i, datas[i].name)
+          this.$set(this.coinSymbol, i, datas[i].symbol)
+          this.$set(this.rank, i, datas[i].rank)
+          this.$set(this.coinPrice, i, datas[i].price_usd)
+          this.$set(this.bitcoinPrice, i, datas[i].price_btc)
+          this.$set(this.marketCap, i, datas[i].market_cap_usd)
+          this.$set(this.change1hour, i, datas[i].percent_change_1h)
+          this.$set(this.change24hour, i, datas[i].percent_change_7d)
+          this.$set(this.change1week, i, datas[i].percent_change_24h)
+          this.$set(this.totalSuply, i, datas[i].total_supply)
+          this.$set(this.maxSupply, i, datas[i].max_supply)
+        }
+      })
+  },
+  computed: {
+    filteredName: function() {
+      return this.coins.filter((item) => {
+        return item.symbol.toUpperCase().includes(this.search.toUpperCase());
+      });
+      // }
     }
-    }
+  }
+}
 </script>
 
 <style scoped>
-  .card {
-    background: #fff;
-    border-radius: 2px;
-    display: inline-block;
-    height: 300px;
-    margin: 1rem;
-    position: relative;
-    width: 300px;
-    margin-bottom: 10px;
-  }
+.card {
+  background: #fff;
+  border-radius: 2px;
+  display: inline-block;
+  height: 300px;
+  margin: 1rem;
+  position: relative;
+  width: 300px;
+  margin-bottom: 10px;
+}
 
-  .card-1 {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
-  }
+.card-1 {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+}
 
-  .card-1:hover {
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-  }
+.card-1:hover {
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
 
-  .search-wrapper{
-    margin: 10px 0;
-  }
+.search-wrapper {
+  margin: 10px 0;
+}
 
-  input {
-    width: 400px;
-    height: 20px;
+input {
+  width: 400px;
+  height: 20px;
+  margin-top: 4.5px;
+  margin-left:5px;
+}
 
+a {
+  text-decoration: none;
+  color: #6c73cc;
+
+}
+
+li {
+  list-style: none;
+}
+
+.container_m {
+  width: 1160px;
+  margin: 0 auto;
+  z-index: 100;
+}
+
+.shadow {
+  position: relative;
+}
+
+.shadow:after {
+  display: block;
+  content: "";
+  position: absolute;
+  z-index: -1;
+
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0);
+  bottom: 1px;
+  left: 18%;
+  right: 10%;
+
+  width: 60%;
+  height: 50%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
+  -webkit-transition: box-shadow .8s ease;
+}
+
+.shadow:hover.shadow:after {
+  display: block;
+  content: "";
+  position: absolute;
+  z-index: -1;
+
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+  bottom: 1px;
+  left: 18%;
+  right: 10%;
+
+  width: 60%;
+  height: 50%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
+
+}
+
+.container_m nav {
+  margin-left: 130px;
+}
+
+.container_m nav ul li {
+  float: left;
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
+
+.container_m nav ul li a {
+  background: white;
+
+  border-radius: 2px;
+
+  display: inline-block;
+  font-size: .8em;
+  font-family: 'Open Sans', arial;
+  color: rgba(0, 0, 0, .6);
+
+  margin-right: 1px;
+  padding: 11px 17px;
+
+}
+
+.container_m nav ul li a:hover {
+  background: rgba(0, 0, 0, .1);
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, .2) inset;
+  color: black;
+
+}
+
+.container_m nav ul li:first-child a:hover span {
+  color: red;
+}
+
+.container_m:before,
+.container_m:after {
+  content: '';
+  display: table;
+}
+
+.container_m:after {
+  clear: both;
+}
+
+#masthead {
+  width: 100%;
+  background: white;
+  margin-bottom: 15px;
 }
 </style>
